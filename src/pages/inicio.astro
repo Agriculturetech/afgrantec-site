@@ -1,0 +1,89 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { countries, email, services, site } from "../data/site";
+---
+
+<Layout title={site.title} description={site.description}>
+  <main id="top">
+    <!-- Hero -->
+    <div class="border-b border-line bg-sand pt-16 pb-14 md:pt-22 md:pb-20">
+      <div class="wrap">
+        <span
+          class="mb-6 inline-block rounded-full border border-brand/20 bg-brand/10 px-3.5 py-1.5 text-[0.78rem] font-bold tracking-[0.08em] text-brand-dark uppercase"
+        >
+          Sitio en construcción
+        </span>
+        <h1
+          class="max-w-[18ch] text-[clamp(2rem,5vw,3.25rem)] leading-[1.12] font-extrabold tracking-[-0.03em]"
+        >
+          El equipo que no encaja con tu granja te cuesta producción, tiempo y dinero.
+        </h1>
+        <p class="mt-6 max-w-[60ch] text-[clamp(1.05rem,2vw,1.25rem)] text-ink-soft">
+          Comprar equipo avícola o porcino no debería ser una apuesta. Diseñamos y seleccionamos
+          cada solución según tu especie, tu etapa productiva y las condiciones reales de tu instalación,
+          y te acompañamos desde el proyecto hasta el suministro y el soporte técnico.
+        </p>
+        <a
+          class="mt-9 inline-flex items-center gap-2.5 rounded-[10px] bg-brand px-[26px] py-3.5 text-base font-bold text-white no-underline transition duration-200 hover:-translate-y-px hover:bg-brand-dark"
+          href={`mailto:${email}`}
+        >
+          Cuéntanos qué necesita tu granja →
+        </a>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <section class="py-14 md:py-18">
+      <div class="wrap">
+        <p class="mb-3 text-[0.8rem] font-bold tracking-[0.1em] text-brand-dark uppercase">
+          Del proyecto al suministro
+        </p>
+        <h2
+          class="max-w-[26ch] text-[clamp(1.5rem,3.2vw,2.1rem)] leading-tight font-extrabold tracking-[-0.02em]"
+        >
+          Soluciones según tu producción, tu etapa y tus condiciones.
+        </h2>
+        <p class="mt-4 max-w-[62ch] text-[1.05rem] text-ink-soft">
+          Seleccionamos y configuramos el equipo partiendo de tu operación: lo que produces hoy
+          y lo que necesitas para crecer.
+        </p>
+
+        <div class="mt-11 grid grid-cols-1 gap-5 md:grid-cols-2">
+          {
+            services.map((service) => (
+              <div class="rounded-[14px] border border-line bg-white p-7 transition duration-200 hover:border-brand/40 hover:shadow-[0_8px_24px_rgba(20,35,27,0.06)]">
+                <div class="text-[0.8rem] font-bold tracking-[0.06em] text-brand">{service.num}</div>
+                <h3 class="my-2.5 text-[1.15rem] font-bold tracking-[-0.01em]">{service.title}</h3>
+                <p class="text-[0.96rem] text-ink-soft">{service.text}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Coverage -->
+    <section class="bg-ink py-14 text-coverage md:py-18">
+      <div class="wrap">
+        <p class="mb-3 text-[0.8rem] font-bold tracking-[0.1em] text-mint uppercase">Cobertura</p>
+        <h2
+          class="max-w-[26ch] text-[clamp(1.5rem,3.2vw,2.1rem)] leading-tight font-extrabold tracking-[-0.02em] text-white"
+        >
+          Equipo y acompañamiento técnico para tu granja.
+        </h2>
+        <p class="mt-4 max-w-[62ch] text-[1.05rem] text-coverage-soft">
+          Conectamos a los productores de Latinoamérica y el Caribe con fabricantes especializados
+          en equipo avícola y porcino. Combinamos selección de equipos, diseño de soluciones y
+          coordinación del suministro con acompañamiento técnico.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          {countries.map((country) => (
+            <span class="rounded-full border border-white/20 px-5 py-2.5 text-[0.95rem] font-semibold">
+              {country}
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

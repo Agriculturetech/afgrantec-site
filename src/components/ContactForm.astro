@@ -1,0 +1,203 @@
+---
+const countries = [
+    "Antigua y Barbuda",
+    "Argentina",
+    "Bahamas",
+    "Barbados",
+    "Belice",
+    "Bolivia",
+    "Brasil",
+    "Chile",
+    "Colombia",
+    "Costa Rica",
+    "Cuba",
+    "Dominica",
+    "Ecuador",
+    "El Salvador",
+    "Granada",
+    "Guatemala",
+    "Guyana",
+    "Haití",
+    "Honduras",
+    "Jamaica",
+    "México",
+    "Nicaragua",
+    "Panamá",
+    "Paraguay",
+    "Perú",
+    "República Dominicana",
+    "San Cristóbal y Nieves",
+    "San Vicente y las Granadinas",
+    "Santa Lucía",
+    "Surinam",
+    "Trinidad y Tobago",
+    "Uruguay",
+    "Venezuela"
+];
+
+const territories = [
+    "Anguila",
+    "Aruba",
+    "Bonaire, San Eustaquio y Saba",
+    "Curazao",
+    "Guadalupe",
+    "Guayana Francesa",
+    "Islas Caimán",
+    "Islas Turcas y Caicos",
+    "Islas Vírgenes Británicas",
+    "Islas Vírgenes de los Estados Unidos",
+    "Martinica",
+    "Montserrat",
+    "Puerto Rico",
+    "San Bartolomé",
+    "San Martín (parte francesa)",
+    "Sint Maarten (parte neerlandesa)"
+];
+
+// Estilos equivalentes a los del formulario de index.astro (site.css) expresados con Tailwind.
+const controlClass =
+    "mt-2 min-h-12 w-full rounded-none border border-[#7b8da6] bg-white px-3.5 py-3 text-base font-normal placeholder:text-[#606f84] placeholder:opacity-100 focus-visible:[outline:2px_solid_#164398] focus-visible:[outline-offset:3px]";
+const arrowClass =
+    "h-6 w-6 shrink-0 transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0";
+---
+
+<form
+    id="contact-form"
+    tabindex="-1"
+    class="scroll-mt-6 bg-white p-9 text-[#101c36] max-[1100px]:p-7 max-[960px]:p-6 max-[380px]:p-5"
+    aria-labelledby="contact-form-title"
+    aria-describedby="form-requirements"
+>
+    <h3
+        id="contact-form-title"
+        class="text-[29px] font-[550] leading-[1.14] tracking-[-0.028em] text-balance max-[960px]:text-[26px]"
+    >
+        Hablemos de tu granja
+    </h3>
+    <p class="mt-3.5 max-w-[70ch] text-[17px] text-[#48586e] max-[640px]:text-base">
+        Completa los datos para preparar tu consulta por correo.
+    </p>
+    <p
+        id="inquiry-context"
+        class="my-4.5 bg-[#f3f6fa] p-3.5 text-[15px] text-[#164398]"
+        aria-live="polite"
+        hidden
+    ></p>
+    <p id="form-requirements" class="mt-4.5 max-w-[70ch] text-[14px] text-[#48586e]">
+        Todos los campos son obligatorios, excepto Empresa.
+    </p>
+    <p id="form-unavailable" class="my-4 max-w-[70ch] text-[15px]">
+        Para preparar tu consulta, activa JavaScript en tu navegador y recarga esta página.
+    </p>
+    <fieldset id="inquiry-fields" class="m-0 min-w-0 border-0 p-0" disabled>
+        <div class="my-6 grid grid-cols-2 gap-5 max-[1100px]:grid-cols-1 max-[640px]:gap-4.5">
+            <label class="block text-base font-medium">
+                Nombre
+                <input
+                    class={controlClass}
+                    name="nombre"
+                    autocomplete="name"
+                    required
+                    maxlength="100"
+                    placeholder="Tu nombre"
+                />
+            </label>
+            <label class="block text-base font-medium">
+                Empresa <span class="text-sm font-normal">(opcional)</span>
+                <input
+                    class={controlClass}
+                    name="empresa"
+                    autocomplete="organization"
+                    maxlength="150"
+                    placeholder="Nombre de tu empresa"
+                />
+            </label>
+            <label class="col-span-full block text-base font-medium">
+                País o territorio
+                <select class={`${controlClass} pr-7.5`} name="pais" required>
+                    <option value="">Selecciona una opción</option>
+                    <optgroup label="Países de Latinoamérica y el Caribe">
+                        {countries.map((country) => <option>{country}</option>)}
+                    </optgroup>
+                    <optgroup label="Territorios de Latinoamérica y el Caribe">
+                        {territories.map((territory) => <option>{territory}</option>)}
+                    </optgroup>
+                    <option>Otro país o territorio</option>
+                </select>
+            </label>
+            <label class="col-span-full block text-base font-medium">
+                Tipo de producción
+                <select
+                    class={`${controlClass} pr-7.5`}
+                    name="produccion"
+                    id="production-select"
+                    required
+                >
+                    <option value="">Selecciona una opción</option>
+                    <option>Avicultura</option>
+                    <option>Porcicultura</option>
+                    <option>Avicultura y porcicultura</option>
+                </select>
+            </label>
+        </div>
+        <label class="block text-base font-medium">
+            ¿Qué necesitas?
+            <textarea
+                id="project-message"
+                class={`${controlClass} resize-y leading-[1.55]`}
+                name="mensaje"
+                rows="5"
+                required
+                maxlength="1800"
+                aria-describedby="project-example"
+                placeholder="Especie, etapa, ubicación y equipo que necesitas."></textarea>
+        </label>
+        <p id="project-example" class="mt-3 max-w-[70ch] text-[14px] leading-[1.6] text-[#48586e]">
+            Por ejemplo: granja de pollo de engorde, 30.000 aves, en Córdoba, Argentina. Busco líneas de
+            alimentación para una nave de 120 x 14 m.
+        </p>
+        <button
+            class="group inline-flex min-h-14 w-full items-center justify-center gap-3 whitespace-normal border border-[#164398] bg-[#164398] px-5.75 py-3 text-base font-[550] leading-[1.4] text-white transition-colors duration-180 hover:bg-[#0c306f] focus-visible:[outline:3px_solid_#be7800] focus-visible:outline-offset-[5px] motion-reduce:transition-none"
+            type="submit"
+        >
+            <span class="text-white">Preparar consulta por correo</span>
+            <svg
+                class={ arrowClass }
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                aria-hidden="true"
+            >
+                <path d="M4 12h15m-6-6 6 6-6 6"></path>
+            </svg>
+        </button>
+    </fieldset>
+    <p
+        id="form-status"
+        class="my-4.5 bg-[#f3f6fa] p-3.5 text-[15px] text-[#164398]"
+        role="status"
+        hidden
+    ></p>
+    <a
+        id="email-fallback"
+        class="group text-[#164398] mt-4 inline-flex min-h-11 items-center gap-4 border-0 bg-transparent p-0 text-base font-medium leading-normal underline decoration-1 underline-offset-[6px] hover:decoration-2 focus-visible:[outline:3px_solid_#be7800] focus-visible:outline-offset-[5px]"
+        hidden
+    >
+        Volver a abrir el correo
+        <svg
+            class={ arrowClass}
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+        >
+            <path d="M4 12h15m-6-6 6 6-6 6"></path>
+        </svg>
+    </a>
+</form>

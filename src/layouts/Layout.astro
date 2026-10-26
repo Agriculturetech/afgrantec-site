@@ -1,0 +1,33 @@
+---
+import "../styles/global.css";
+import { Font } from "astro:assets";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index,follow" />
+        <meta name="description" content={description} />
+        <title>{title}</title>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <Font cssVariable="--font-work-sans" preload />
+        <slot name="head" />
+    </head>
+    <body>
+        <Header />
+        <slot />
+        <Footer />
+    </body>
+</html>

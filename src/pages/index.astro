@@ -1,0 +1,341 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const title = "AFGRANTEC | Equipo para avicultura y porcicultura";
+const description =
+  "Diseño, suministro y soporte técnico para nuevas instalaciones y mejoras en tu granja. Latinoamérica y el Caribe.";
+
+const countries = [
+    "Antigua y Barbuda",
+    "Argentina",
+    "Bahamas",
+    "Barbados",
+    "Belice",
+    "Bolivia",
+    "Brasil",
+    "Chile",
+    "Colombia",
+    "Costa Rica",
+    "Cuba",
+    "Dominica",
+    "Ecuador",
+    "El Salvador",
+    "Granada",
+    "Guatemala",
+    "Guyana",
+    "Haití",
+    "Honduras",
+    "Jamaica",
+    "México",
+    "Nicaragua",
+    "Panamá",
+    "Paraguay",
+    "Perú",
+    "República Dominicana",
+    "San Cristóbal y Nieves",
+    "San Vicente y las Granadinas",
+    "Santa Lucía",
+    "Surinam",
+    "Trinidad y Tobago",
+    "Uruguay",
+    "Venezuela"
+];
+
+const territories = [
+    "Anguila",
+    "Aruba",
+    "Bonaire, San Eustaquio y Saba",
+    "Curazao",
+    "Guadalupe",
+    "Guayana Francesa",
+    "Islas Caimán",
+    "Islas Turcas y Caicos",
+    "Islas Vírgenes Británicas",
+    "Islas Vírgenes de los Estados Unidos",
+    "Martinica",
+    "Montserrat",
+    "Puerto Rico",
+    "San Bartolomé",
+    "San Martín (parte francesa)",
+    "Sint Maarten (parte neerlandesa)"
+];
+
+const equipmentFamilies = [
+    {
+        id: "feeding",
+        photo: "/assets/applications/feeding.jpg",
+        width: 1000,
+        height: 667,
+        alt: "Línea de comederos instalada en una nave avícola",
+        title: "Alimentación y automatización",
+        text: "Comederos, dosificación y líneas automáticas.",
+    },
+    {
+        id: "drinking",
+        photo: "/assets/applications/drinking.jpg",
+        width: 1000,
+        height: 562,
+        alt: "Gallinas junto a una línea de bebida con regulador de agua",
+        title: "Agua y sistemas de bebida",
+        text: "Líneas de bebida, regulación y bebederos.",
+    },
+    {
+        id: "ventilation",
+        photo: "/assets/applications/ventilation.jpg",
+        width: 1000,
+        height: 523,
+        alt: "Ventilador de circulación instalado bajo el techo de una nave",
+        title: "Ventilación y ambiente",
+        text: "Extracción, circulación y entradas de aire.",
+    },
+    {
+        id: "silos",
+        photo: "/assets/applications/silos.jpg",
+        width: 952,
+        height: 1100,
+        alt: "Silos de alimento instalados junto a una nave",
+        title: "Silos y transporte de alimento",
+        text: "Almacenamiento y distribución en la granja.",
+    },
+    {
+        id: "housing",
+        photo: "/assets/applications/housing.jpg",
+        width: 1000,
+        height: 562,
+        alt: "Lechones en una instalación con piso plástico y comederos",
+        title: "Pisos y alojamiento",
+        text: "Pisos, soportes y áreas de maternidad.",
+    },
+    {
+        id: "components",
+        photo: "/assets/applications/components.jpg",
+        width: 991,
+        height: 1000,
+        alt: "Detalle de una manivela de ajuste de un equipo SDI",
+        title: "Componentes y repuestos",
+        text: "Identificación por marca, modelo y referencia.",
+    }
+];
+
+const services = [
+    {
+        title: "Ingeniería y diseño",
+        text: "Revisamos tu instalación y definimos el equipo necesario, considerando especie, etapa productiva, capacidad y condiciones de la granja.",
+    },
+    {
+        title: "Suministro e importación",
+        text: "Preparamos la cotización y coordinamos el suministro y la importación con el alcance y las condiciones acordadas.",
+    },
+    {
+        title: "Instalación y capacitación",
+        text: "Coordinamos la instalación, la puesta en marcha y la capacitación del personal para operar el equipo de tu proyecto.",
+    },
+    {
+        title: "Repuestos y postventa",
+        text: "Te apoyamos con repuestos, soporte técnico y gestión de garantías con el fabricante, según el equipo y sus condiciones.",
+    }
+];
+---
+
+<Layout title={ title } description={ description }>
+    <link slot="head" rel="icon" href="/assets/symbol.svg" type="image/svg+xml" />
+    <meta
+      slot="head"
+      property="og:description"
+      content="Diseño, suministro y soporte técnico para tu granja. Latinoamérica y el Caribe."
+    />
+    <a class="skip" href="#principal">Saltar al contenido</a>
+    <main id="principal" tabindex="-1">
+        <div class="opening-group">
+            <section class="opening-a" aria-labelledby="hero-title">
+                <div class="a-copy">
+                    <h1 id="hero-title">Equipo para<br />avicultura y<br />porcicultura.</h1>
+                    <p>Diseño, suministro y soporte técnico para nuevas instalaciones y mejoras en tu granja.</p>
+                    <a class="button" href="#contacto">
+                        Consultar un proyecto
+                        <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 12h15m-6-6 6 6-6 6"></path>
+                        </svg>
+                    </a>
+                </div>
+                <div class="a-images">
+                    <figure>
+                        <img
+                            class="poultry"
+                            fetchpriority="high"
+                            src="/assets/drinking.jpg"
+                            width="2200"
+                            height="1650"
+                            alt="Pollitos junto a una línea de bebida"
+                        />
+                        <figcaption>Avicultura</figcaption>
+                    </figure>
+                    <figure>
+                        <img
+                            class="swine"
+                            src="/assets/swine-818.webp"
+                            width="818"
+                            height="558"
+                            alt="Lechones sobre piso plástico en una instalación porcina"
+                        />
+                        <figcaption>Porcicultura</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="brands opening-brands" aria-labelledby="brands-title">
+                <div class="brand-line">
+                    <h2 id="brands-title">Marcas de nuestro portafolio</h2>
+                </div>
+                <div class="brand-grid">
+                    <div class="brand">
+                        <img
+                            class="logo-double"
+                            src="/assets/brands/double-l-optimized.jpg"
+                            alt="Double L Group"
+                            width="285"
+                            height="247"
+                        />
+                    </div>
+                    <div class="brand brand-jd">
+                        <div class="jd-lockup" role="img" aria-label="J&amp;D Manufacturing, Ambiente controlado">
+                            <img src="/assets/brands/jd-catalogue.png" alt="" width="250" height="57" />
+                            <div class="jd-caption" aria-hidden="true">
+                                <div class="jd-word">
+                                    <span>A</span><span>M</span><span>B</span><span>I</span><span>E</span><span>N</span><span>T</span><span>E</span>
+                                </div>
+                                <div class="jd-word">
+                                    <span>C</span><span>O</span><span>N</span><span>T</span><span>R</span><span>O</span><span>L</span><span>A</span><span>D</span><span>O</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="brand">
+                        <img
+                            class="logo-maximus"
+                            src="/assets/brands/maximus-neutral.svg"
+                            alt="MAXIMUS"
+                            width="216"
+                            height="155"
+                        />
+                    </div>
+                    <div class="brand">
+                        <img class="logo-sdi" src="/assets/brands/sdi-clean.png" alt="SDI" width="1132" height="796" />
+                    </div>
+                    <div class="brand">
+                        <img
+                            class="logo-supreme"
+                            src="/assets/brands/supreme-optimized.png"
+                            alt="Supreme Equipments"
+                            width="450"
+                            height="120"
+                        />
+                    </div>
+                    <div class="brand">
+                        <img class="logo-tigsa" src="/assets/brands/tigsa.svg" alt="TIGSA" width="279" height="114" />
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="equipment-index section wrap" id="equipo" aria-labelledby="equipment-title">
+            <div class="section-intro">
+                <h2 id="equipment-title">Equipo para cada<br />área de tu granja.</h2>
+                <p>Encuentra soluciones según la producción, la etapa y las condiciones de tu instalación.</p>
+            </div>
+            <div class="family-index">
+                {
+                    equipmentFamilies.map((family) => (
+                        <article class="family-item">
+                            <div class="family-photo">
+                                <img
+                                    class={`photo-${family.id}`}
+                                    src={family.photo}
+                                    width={family.width}
+                                    height={family.height}
+                                    alt={family.alt}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </div>
+                            <div class="family-copy">
+                                <h3>{family.title}</h3>
+                                <p>{family.text}</p>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+            <p class="equipment-note">Imágenes de equipo de nuestros proveedores. La marca y configuración se definen según cada proyecto.</p>
+        </section>
+
+        <section class="services section" id="servicios" aria-labelledby="services-title">
+            <div class="services-layout wrap">
+                <div class="service-intro">
+                    <h2 id="services-title">Del proyecto<br />al suministro.</h2>
+                    <p class="service-lead">Seleccionamos y configuramos el equipo según la producción y las condiciones de la instalación.</p>
+                    <figure class="service-photo">
+                        <img
+                            src="/assets/applications/ventilation-installation.jpg"
+                            width="1100"
+                            height="1100"
+                            alt="Extractores instalados en el exterior de una nave, imagen de J&amp;D"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                        <figcaption>Aplicación de ventilación · Imagen de J&amp;D</figcaption>
+                    </figure>
+                </div>
+                <div class="service-list">
+                    {
+                    services.map((service) => (
+                        <article>
+                        <h3>{service.title}</h3>
+                        <p>{service.text}</p>
+                        </article>
+                    ))
+                    }
+                </div>
+                <p class="service-scope">La instalación y la puesta en marcha se realizan con equipo propio o socios locales, según el país y el proyecto. El alcance de los servicios se define en la cotización.</p>
+            </div>
+        </section>
+
+        <section class="about section" id="nosotros" aria-labelledby="about-title">
+            <div class="about-grid wrap">
+                <h2 id="about-title">Equipo y acompañamiento técnico para tu granja.</h2>
+                <div class="about-copy">
+                    <p>
+                    Conectamos a los productores de Latinoamérica y el Caribe con fabricantes especializados en equipo avícola
+                    y porcino.</p>
+                    <p>
+                    Combinamos selección de equipos, diseño de soluciones y coordinación del suministro con acompañamiento
+                    técnico. Partimos de tu operación para definir lo que necesitas.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact section" id="contacto">
+            <div class="contact-layout wrap">
+                <div class="contact-intro">
+                    <h2>Cuéntanos tu proyecto</h2>
+                    <p>Una instalación nueva, una mejora o un repuesto. Comparte lo que necesitas y el lugar donde trabajas.</p>
+                    <aside class="quote-guide" aria-labelledby="quote-guide-title">
+                        <h3 id="quote-guide-title">Para preparar tu cotización</h3>
+                        <ul>
+                            <li>Especie, etapa y número de animales.</li>
+                            <li>Ubicación y medidas de la instalación.</li>
+                            <li>Equipo de interés y lo que ya tienes instalado.</li>
+                        </ul>
+                        <p>Puedes adjuntar fotografías al correo. Si aún no tienes todos los datos, cuéntanos lo que sabes.</p>
+                    </aside>
+                </div>
+                <script data-b24-form="inline/8/jnpsvc" data-b24-form-telemetry-sign="v1:8:site.44c0d3992d3fb8c3b336922f381ab5c717b5eccc7208f8c67595ac1501110788" data-skip-moving="true">
+                    (function(w,d,u){var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);})(window,document,'https://cdn.bitrix24.com/b29973467/crm/form/loader_8.js');
+                </script>
+            
+            </div>
+        </section>
+    </main>
+    <script is:inline src="/app.js" defer></script>
+</Layout>
