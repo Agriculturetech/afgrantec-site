@@ -1,10 +1,14 @@
 ---
 import "../styles/site.css";
 import "../styles/opening-a.css";
+
+const path = Astro.url.pathname;
+const isHome = path === "/" || path === "/inicio";
+const anchor = (hash: string): string => (isHome ? hash : `/${hash}`);
 ---
 
 <header class="site-header header-a" id="inicio">
-  <a href="#inicio" aria-label="AFGRANTEC, inicio">
+  <a href={anchor("#inicio")} aria-label="AFGRANTEC, inicio">
     <img
       class="site-logo"
       src="/assets/logo-compact.svg"
@@ -14,16 +18,16 @@ import "../styles/opening-a.css";
     />
   </a>
   <nav class="site-nav" aria-label="Navegación principal">
-    <a href="#equipo">Equipo</a>
-    <a href="#nosotros">Empresa</a>
-    <a class="nav-contact" href="#contacto">
+    <a href={anchor("#equipo")}>Equipo</a>
+    <a href={anchor("#nosotros")}>Empresa</a>
+    <a class="nav-contact" href={anchor("#contacto")}>
       Contacto
       <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 12h15m-6-6 6 6-6 6"></path>
       </svg>
     </a>
   </nav>
-  <a class="mobile-contact" href="#contacto">
+  <a class="mobile-contact" href={anchor("#contacto")}>
     Contacto
     <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M4 12h15m-6-6 6 6-6 6"></path>

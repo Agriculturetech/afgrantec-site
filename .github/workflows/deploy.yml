@@ -22,11 +22,30 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: PHP syntax check
+        run: |
+          find api scripts -name '*.php' -not -name 'config.php' -print0 \
+            | xargs -0 -n1 php -l
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build project
         run: pnpm build
+        env:
+          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
+          SHEETS_SA_JSON: ${{ secrets.SHEETS_SA_JSON }}
+          SHEETS_ID: ${{ secrets.SHEETS_ID }}
+          APP_SALT: ${{ secrets.APP_SALT }}
 
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

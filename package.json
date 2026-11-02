@@ -6,8 +6,9 @@
   "packageManager": "pnpm@12.4.2",
   "scripts": {
     "dev": "astro dev",
+    "dev:api": "php -S 127.0.0.1:8081 scripts/dev-api-router.php",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/build-api.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro"

@@ -1,0 +1,21 @@
+# Configuración, reglas y almacenamiento: fuera del alcance HTTP.
+<FilesMatch "^(config\.php|config\.example\.php|rules\.json)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Restos de logs o documentación junto al endpoint.
+<FilesMatch "\.(log|json|md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

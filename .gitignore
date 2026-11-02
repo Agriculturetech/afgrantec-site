@@ -16,5 +16,11 @@ pnpm-debug.log*
 .env
 .env.production
 
+# backend: la configuración real (secretos) y el almacenamiento no se versionan
+api/config.php
+api/storage/cache/
+api/storage/logs/
+api/storage/rate/
+
 # macOS-specific files
 .DS_Store

@@ -2,22 +2,38 @@
 import "../styles/site.css";
 
 const year = new Date().getFullYear();
+const path = Astro.url.pathname;
+const isHome = path === "/" || path === "/inicio";
+const anchor = (hash: string): string => (isHome ? hash : `/${hash}`);
 ---
 
 <footer class="wrap">
   <div class="footer-top">
-    <a href="#inicio" aria-label="AFGRANTEC, inicio">
+    <a href={anchor("#inicio")} aria-label="AFGRANTEC, inicio">
       <img src="/assets/logo-compact.svg" width="3210" height="600" alt="AFGRANTEC" loading="lazy" />
     </a>
     <div class="footer-links">
       <nav aria-label="Navegación del pie">
-        <a href="#equipo">Equipo</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#contacto">Contacto</a>
+        <a href={anchor("#equipo")}>Equipo</a>
+        <a href={anchor("#servicios")}>Servicios</a>
+        <a href={anchor("#contacto")}>Contacto</a>
       </nav>
     </div>
   </div>
   <div class="footer-bottom">
     <span>&copy; {year} AFGRANTEC</span>
+    <a class="footer-legal" href="/privacidad">Política de privacidad</a>
   </div>
 </footer>
+
+<style>
+  .footer-bottom .footer-legal {
+    color: var(--copy);
+    text-decoration: none;
+  }
+
+  .footer-bottom .footer-legal:hover {
+    color: var(--blue);
+    text-decoration: underline;
+  }
+</style>

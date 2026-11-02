@@ -72,8 +72,9 @@ El sitio quedará disponible en **http://localhost:4321**.
 | Comando | Descripción |
 |---|---|
 | `pnpm dev` | Inicia el servidor de desarrollo (`astro dev`) |
+| `pnpm dev:api` | Levanta el backend PHP local en `127.0.0.1:8081` (necesario para probar el formulario) |
 | `pnpm start` | Equivalente a `pnpm dev` |
-| `pnpm build` | Genera el sitio estático en `dist/` |
+| `pnpm build` | Genera el sitio estático en `dist/` y copia el backend a `dist/api/` |
 | `pnpm preview` | Previsualiza el build en local (`astro preview`) |
 | `pnpm check` | Verifica tipos y errores de Astro (`astro check`) |
 | `pnpm astro` | Ejecuta la CLI de Astro |
@@ -84,18 +85,30 @@ El sitio quedará disponible en **http://localhost:4321**.
 
 ```
 afgrantec/
-├── astro.config.mjs       Configuración de Astro + plugin de Tailwind
+├── astro.config.mjs       Configuración de Astro + plugin de Tailwind + proxy /api
 ├── package.json           Dependencias y scripts
 ├── tsconfig.json          Configuración de TypeScript
 ├── pnpm-lock.yaml         Versiones exactas de dependencias
+├── api/                   Backend PHP del formulario (fuera de public/)
+│   ├── contact.php        Endpoint POST /api/contact.php
+│   ├── rules.json         Reglas y países compartidos por cliente y servidor
+│   ├── config.example.php Plantilla de configuración (config.php no se versiona)
+│   └── src/               bootstrap, validación, antispam, Graph y Sheets
+├── scripts/
+│   ├── build-api.mjs      Copia api/ a dist/api/ y genera config.php en CI
+│   └── dev-api-router.php Router para `php -S` en desarrollo
 ├── src/
 │   ├── pages/
-│   │   └── index.astro    Página principal (única página del sitio)
+│   │   ├── index.astro    Página principal
+│   │   └── privacidad.astro Política de privacidad
 │   ├── layouts/
 │   │   └── Layout.astro   Plantilla base: html, head, Header y Footer
 │   ├── components/
-│   │   ├── Header.astro   Cabecera fija con logo y correo de contacto
+│   │   ├── Header.astro   Cabecera fija con logo y navegación
+│   │   ├── ContactForm.astro Formulario con errores accesibles
 │   │   └── Footer.astro   Pie de página
+│   ├── scripts/
+│   │   └── contact-form.ts Validación en cliente y envío por fetch
 │   ├── data/
 │   │   └── site.ts        Contenido y datos del sitio
 │   └── styles/
@@ -138,9 +151,55 @@ Para modificar textos, servicios o países, basta con editar este archivo.
 
 ---
 
+## Formulario de contacto
+
+El formulario de `index.astro` hace `POST` a `/api/contact.php` (PHP 8.2+). El flujo es:
+
+1. **Cliente** (`src/scripts/contact-form.ts`): valida al salir de cada campo, mueve el foco al
+   primer error y envía por `fetch`. Sin JavaScript el formulario hace POST normal y el servidor
+   responde con un `303` a `/?estado=ok|error#contacto`.
+2. **Servidor**: antispam (honeypot, trampa de tiempo y límite de peticiones), validación con las
+   mismas reglas de `api/rules.json`, registro en Google Sheets y envío con Microsoft Graph.
+
+| Respuesta | Significado |
+|---|---|
+| `200` | Consulta registrada y enviada |
+| `422` | Errores de validación por campo |
+| `403` | Bloqueado (origen, honeypot o tiempo) |
+| `429` | Demasiadas peticiones |
+| `502` | Microsoft Graph rechazó el correo |
+
+### Configuración local
+
+```bash
+cp api/config.example.php api/config.php   # rellenar credenciales
+pnpm dev:api                               # PHP en 127.0.0.1:8081
+pnpm dev                                   # Astro en 4321 (proxy /api)
+```
+
+`api/config.php` no se versiona. Con `'dry_run' => true` el endpoint no envía correo ni escribe
+en Sheets: solo registra en `api/storage/logs/`.
+
+### Secrets de GitHub Actions
+
+| Secret | Uso |
+|---|---|
+| `GRAPH_TENANT_ID`, `GRAPH_CLIENT_ID`, `GRAPH_CLIENT_SECRET` | App de Entra ID con `Mail.Send` |
+| `GRAPH_SENDER` | Buzón remitente (`sebastian.lora@afgrantec.com`) |
+| `SHEETS_SA_JSON` | JSON completo de la cuenta de servicio de Google |
+| `SHEETS_ID` | ID de la hoja de cálculo |
+| `APP_SALT` | Cadena aleatoria para el hash de IP |
+
+`pnpm build` genera `dist/api/config.php` a partir de estos valores y falla en CI si falta alguno.
+Las tareas pendientes están en [`docs/deuda-tecnica.md`](docs/deuda-tecnica.md).
+
+---
+
 ## Despliegue
 
-El build genera archivos estáticos en `dist/`, por lo que el sitio puede publicarse en cualquier hosting estático (Netlify, Vercel, Cloudflare Pages, etc.) con esta configuración:
+El build genera el sitio estático en `dist/` (incluido `dist/api/`) y el workflow
+`.github/workflows/deploy.yml` lo publica por FTP en Hostinger en cada push a `main`.
+El servidor debe tener PHP 8.2 o superior y permitir escritura en `/api/storage/`.
 
 | Ajuste | Valor |
 |---|---|

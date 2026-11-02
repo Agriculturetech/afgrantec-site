@@ -1,64 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ContactForm from "../components/ContactForm.astro";
 
 const title = "AFGRANTEC | Equipo para avicultura y porcicultura";
-const description =
-  "Diseño, suministro y soporte técnico para nuevas instalaciones y mejoras en tu granja. Latinoamérica y el Caribe.";
-
-const countries = [
-    "Antigua y Barbuda",
-    "Argentina",
-    "Bahamas",
-    "Barbados",
-    "Belice",
-    "Bolivia",
-    "Brasil",
-    "Chile",
-    "Colombia",
-    "Costa Rica",
-    "Cuba",
-    "Dominica",
-    "Ecuador",
-    "El Salvador",
-    "Granada",
-    "Guatemala",
-    "Guyana",
-    "Haití",
-    "Honduras",
-    "Jamaica",
-    "México",
-    "Nicaragua",
-    "Panamá",
-    "Paraguay",
-    "Perú",
-    "República Dominicana",
-    "San Cristóbal y Nieves",
-    "San Vicente y las Granadinas",
-    "Santa Lucía",
-    "Surinam",
-    "Trinidad y Tobago",
-    "Uruguay",
-    "Venezuela"
-];
-
-const territories = [
-    "Anguila",
-    "Aruba",
-    "Bonaire, San Eustaquio y Saba",
-    "Curazao",
-    "Guadalupe",
-    "Guayana Francesa",
-    "Islas Caimán",
-    "Islas Turcas y Caicos",
-    "Islas Vírgenes Británicas",
-    "Islas Vírgenes de los Estados Unidos",
-    "Martinica",
-    "Montserrat",
-    "Puerto Rico",
-    "San Bartolomé",
-    "San Martín (parte francesa)",
-    "Sint Maarten (parte neerlandesa)"
-];
+const description = "Diseño, suministro y soporte técnico para nuevas instalaciones y mejoras en tu granja. Latinoamérica y el Caribe.";
 
 const equipmentFamilies = [
     {
@@ -330,12 +275,9 @@ const services = [
                         <p>Puedes adjuntar fotografías al correo. Si aún no tienes todos los datos, cuéntanos lo que sabes.</p>
                     </aside>
                 </div>
-                <script data-b24-form="inline/8/jnpsvc" data-b24-form-telemetry-sign="v1:8:site.44c0d3992d3fb8c3b336922f381ab5c717b5eccc7208f8c67595ac1501110788" data-skip-moving="true">
-                    (function(w,d,u){var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);})(window,document,'https://cdn.bitrix24.com/b29973467/crm/form/loader_8.js');
-                </script>
+                <ContactForm />
             
             </div>
         </section>
     </main>
-    <script is:inline src="/app.js" defer></script>
 </Layout>
