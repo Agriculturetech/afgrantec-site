@@ -202,8 +202,10 @@ El build genera el sitio estático en `dist/` (incluido `dist/api/`) y el workfl
 El servidor debe tener PHP 8.2 o superior y permitir escritura en `/api/storage/`.
 
 También se puede lanzar a mano (Actions → *Deploy Astro to Hostinger* → *Run workflow*).
-Si el paso de FTP falla con `ECONNRESET` o `425`, suele ser un corte pasajero de Hostinger:
-*Re-run all jobs* lo resuelve sin tocar nada; los secrets se releen en cada ejecución.
+El FTP de Hostinger corta el canal de datos de forma intermitente
+(`read ECONNRESET (data socket)`), así que el workflow despliega con **hasta 3 intentos**
+separados 30 s y 60 s; solo falla si fallan los tres. Si aun así falla, *Re-run all jobs*
+vuelve a intentarlo desde cero (los secrets se releen en cada ejecución).
 
 | Ajuste | Valor |
 |---|---|

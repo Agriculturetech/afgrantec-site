@@ -92,3 +92,34 @@ habría que mover el contador a un almacén compartido (Redis, base de datos).
 
 El envío va por Microsoft Graph con `curl`, así que no hay dependencias PHP que instalar.
 Si se cambiara a SMTP, habría que añadir PHPMailer y `vendor/` al pipeline.
+
+## 9. Deploy por FTP con cortes intermitentes
+
+**Estado:** mitigado, no resuelto.
+
+El FTP de Hostinger cierra el canal de datos de forma intermitente
+(`Error: Client is closed because read ECONNRESET (data socket)`) durante el listado inicial,
+antes de subir nada. Es un fallo conocido de `basic-ftp` / FTP-Deploy-Action contra servidores
+que cortan el modo pasivo.
+
+Causa más probable en este caso: `afgrantec.com` publica registros AAAA y los runners de
+GitHub tienen IPv6. Cuando el runner conecta por IPv6, el canal de datos del FTP se corta;
+cuando lo hace por IPv4, funciona. Por eso el fallo es intermitente.
+
+Mitigación actual:
+
+1. `NODE_OPTIONS: --dns-result-order=ipv4first` a nivel de job, para que la action resuelva
+   el host del FTP por IPv4.
+2. Hasta 3 intentos del deploy (30 s y 60 s de espera).
+
+Si los cortes se vuelven frecuentes, el plan B es dejar de usar FTP:
+
+1. **SFTP sobre SSH** con `rsync`: hPanel → Avanzado → SSH; requiere clave en secrets y
+   sustituir la action por un paso `rsync -az --delete dist/ usuario@host:~/public_html/`.
+2. **Git deploy de Hostinger**: el hosting hace `pull` del repo en cada push; el workflow
+   deja de necesitar credenciales FTP.
+3. **IP fija en `FTP_SERVER`**: cambiar el secret por la IPv4 del servidor evita la
+   resolución DNS, pero hay que actualizarlo si Hostinger cambia de nodo.
+4. **FTP con TLS** (`protocol: ftps`, `security: loose`): algunos cortes por inspección de
+   paquetes desaparecen al cifrar el canal, pero no arregla los límites de conexión.
+

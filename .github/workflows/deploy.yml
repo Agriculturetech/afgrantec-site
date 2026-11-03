@@ -8,6 +8,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # Los runners tienen IPv6 y el dominio publica registros AAAA; el canal de datos
+    # del FTP de Hostinger se corta al conectar por IPv6 (ECONNRESET). Forzar IPv4.
+    env:
+      NODE_OPTIONS: --dns-result-order=ipv4first
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -48,9 +52,11 @@ jobs:
           SHEETS_ID: ${{ secrets.SHEETS_ID }}
           APP_SALT: ${{ secrets.APP_SALT }}
 
-      - name: Deploy to Hostinger via FTP
+      - name: Deploy to Hostinger (intento 1 de 3)
+        id: deploy-1
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
+        with: &ftp-deploy
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
@@ -60,3 +66,25 @@ jobs:
           local-dir: ./dist/
           server-dir: ./
           dangerous-clean-slate: false
+
+      # El FTP de Hostinger corta el canal de datos de forma intermitente
+      # ("read ECONNRESET (data socket)"): reintentar espaciado lo resuelve.
+      - name: Espera antes del reintento
+        if: steps.deploy-1.outcome == 'failure'
+        run: sleep 30
+
+      - name: Deploy to Hostinger (intento 2 de 3)
+        id: deploy-2
+        if: steps.deploy-1.outcome == 'failure'
+        continue-on-error: true
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with: *ftp-deploy
+
+      - name: Espera antes del último intento
+        if: steps.deploy-1.outcome == 'failure' && steps.deploy-2.outcome == 'failure'
+        run: sleep 60
+
+      - name: Deploy to Hostinger (intento 3 de 3)
+        if: steps.deploy-1.outcome == 'failure' && steps.deploy-2.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with: *ftp-deploy
