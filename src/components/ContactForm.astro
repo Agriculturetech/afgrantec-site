@@ -67,6 +67,134 @@ const errorClass = "field-error";
         color: #8a1c14;
         background: #fdf1ef;
     }
+
+    /* Lightbox de resultado: verde si se envió, rojo si falló. */
+    .lightbox {
+        width: min(26rem, calc(100vw - 2rem));
+        max-width: none;
+        margin: auto;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #fff;
+        overflow: visible;
+    }
+
+    .lightbox::backdrop {
+        background: rgba(8, 18, 33, 0.62);
+    }
+
+    .lightbox[open] {
+        animation: lightbox-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .lightbox-card {
+        position: relative;
+        overflow: hidden;
+        padding: 26px 24px 22px;
+        box-shadow: 0 26px 70px rgba(6, 16, 30, 0.32);
+    }
+
+    .lightbox[data-state="ok"] .lightbox-card {
+        background: #0c5132;
+    }
+
+    .lightbox[data-state="error"] .lightbox-card {
+        background: #8a1c14;
+    }
+
+    .lightbox-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.16);
+        color: #fff;
+    }
+
+    .lightbox[data-state="ok"] .lightbox-icon-error,
+    .lightbox[data-state="error"] .lightbox-icon-ok {
+        display: none;
+    }
+
+    .lightbox-title {
+        margin: 14px 0 0;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+    }
+
+    .lightbox-message {
+        margin: 8px 0 0;
+        font-size: 15px;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.94);
+    }
+
+    .lightbox-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 44px;
+        margin-top: 18px;
+        padding: 8px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 550;
+        line-height: 1.4;
+        cursor: pointer;
+        transition: background-color 160ms ease;
+    }
+
+    .lightbox-close:hover {
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+    .lightbox-close:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 3px;
+    }
+
+    .lightbox-progress {
+        position: absolute;
+        inset: auto 0 0;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.85);
+        transform-origin: left center;
+        animation: lightbox-progress 3000ms linear forwards;
+    }
+
+    @keyframes lightbox-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px) scale(0.98);
+        }
+    }
+
+    @keyframes lightbox-progress {
+        from {
+            transform: scaleX(1);
+        }
+        to {
+            transform: scaleX(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .lightbox[open] {
+            animation: none;
+        }
+
+        .lightbox-progress {
+            animation: none;
+        }
+    }
 </style>
 
 <form
@@ -307,6 +435,50 @@ const errorClass = "field-error";
             <path d="M4 12h15m-6-6 6 6-6 6"></path>
         </svg>
     </a>
+
+    <dialog
+        id="form-lightbox"
+        class="lightbox"
+        aria-labelledby="lightbox-title"
+        aria-describedby="lightbox-message"
+    >
+        <div class="lightbox-card">
+            <span class="lightbox-icon" aria-hidden="true">
+                <svg
+                    class="lightbox-icon-ok"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="m5 13 4 4L19 7"></path>
+                </svg>
+                <svg
+                    class="lightbox-icon-error"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 8v5"></path>
+                    <path d="M12 17h.01"></path>
+                </svg>
+            </span>
+            <h4 id="lightbox-title" class="lightbox-title"></h4>
+            <p id="lightbox-message" class="lightbox-message"></p>
+            <button type="button" id="lightbox-close" class="lightbox-close">Cerrar</button>
+            <span id="lightbox-progress" class="lightbox-progress" aria-hidden="true"></span>
+        </div>
+    </dialog>
 </form>
 
 <script>

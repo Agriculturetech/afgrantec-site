@@ -201,6 +201,10 @@ El build genera el sitio estático en `dist/` (incluido `dist/api/`) y el workfl
 `.github/workflows/deploy.yml` lo publica por FTP en Hostinger en cada push a `main`.
 El servidor debe tener PHP 8.2 o superior y permitir escritura en `/api/storage/`.
 
+También se puede lanzar a mano (Actions → *Deploy Astro to Hostinger* → *Run workflow*).
+Si el paso de FTP falla con `ECONNRESET` o `425`, suele ser un corte pasajero de Hostinger:
+*Re-run all jobs* lo resuelve sin tocar nada; los secrets se releen en cada ejecución.
+
 | Ajuste | Valor |
 |---|---|
 | Comando de build | `pnpm build` |

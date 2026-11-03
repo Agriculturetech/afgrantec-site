@@ -65,11 +65,20 @@ if (form) {
     const countryName = $<HTMLInputElement>("#pais-nombre");
     const origin = $<HTMLInputElement>("#origen");
     const topic = root.querySelector<HTMLTextAreaElement>("#mensaje");
+    const lightbox = $<HTMLDialogElement>("#form-lightbox");
+    const lightboxTitle = $<HTMLElement>("#lightbox-title");
+    const lightboxMessage = $<HTMLElement>("#lightbox-message");
+    const lightboxClose = $<HTMLButtonElement>("#lightbox-close");
+    const lightboxProgress = $<HTMLElement>("#lightbox-progress");
+
+    // Debe coincidir con la duración de la animación en el <style> del componente.
+    const LIGHTBOX_TIMEOUT = 3000;
 
     const touched = new Set<FieldName>();
     const defaultPhonePlaceholder = fields.telefono.getAttribute("placeholder") ?? "";
     const otherPhonePlaceholder = "Incluye el código de país, ej. +1 305 555 0100";
     let submitting = false;
+    let lightboxTimer: number | undefined;
 
     // Con JavaScript usamos nuestra validación; sin JavaScript, la del navegador.
     root.noValidate = true;
@@ -182,6 +191,63 @@ if (form) {
         fallback.href = buildMailto();
         fallback.hidden = false;
     }
+
+    function hideLightbox(): void {
+        if (lightboxTimer !== undefined) {
+            window.clearTimeout(lightboxTimer);
+            lightboxTimer = undefined;
+        }
+
+        if (lightbox.open) {
+            lightbox.close();
+        } else {
+            lightbox.removeAttribute("open");
+        }
+    }
+
+    /**
+     * Muestra el aviso flotante sobre el formulario y lo cierra solo a los 3 s.
+     * El texto queda además en #form-status, para que siga visible al cerrarlo.
+     */
+    function showLightbox(state: "ok" | "error", title: string, message: string): void {
+        lightboxTitle.textContent = title;
+        lightboxMessage.textContent = message;
+        lightbox.dataset.state = state;
+
+        // Reinicia la barra de progreso aunque el lightbox ya estuviera abierto.
+        lightboxProgress.style.animation = "none";
+        void lightboxProgress.offsetWidth;
+        lightboxProgress.style.animation = "";
+
+        if (!lightbox.open) {
+            if (typeof lightbox.showModal === "function") {
+                lightbox.showModal();
+            } else {
+                lightbox.setAttribute("open", "");
+            }
+        }
+
+        if (lightboxTimer !== undefined) {
+            window.clearTimeout(lightboxTimer);
+        }
+        lightboxTimer = window.setTimeout(hideLightbox, LIGHTBOX_TIMEOUT);
+    }
+
+    lightboxClose.addEventListener("click", hideLightbox);
+
+    lightbox.addEventListener("close", () => {
+        if (lightboxTimer !== undefined) {
+            window.clearTimeout(lightboxTimer);
+            lightboxTimer = undefined;
+        }
+    });
+
+    // Clic en el fondo oscuro (fuera de la tarjeta): también cierra.
+    lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox) {
+            hideLightbox();
+        }
+    });
 
     function buildMailto(): string {
         const data = new FormData(root);
@@ -319,6 +385,11 @@ if (form) {
                 syncCountry();
                 renderedAt.value = String(Date.now());
                 showStatus("ok", "Recibimos tu consulta. Te responderemos al correo que indicaste.");
+                showLightbox(
+                    "ok",
+                    "Consulta enviada",
+                    "Recibimos tu consulta. Te responderemos al correo que indicaste.",
+                );
                 return;
             }
 
@@ -334,17 +405,37 @@ if (form) {
 
             if (response.status === 429) {
                 showStatus("error", "Has enviado varias consultas seguidas. Espera unos minutos y vuelve a intentarlo.");
+                showLightbox(
+                    "error",
+                    "Demasiados envíos",
+                    "Has enviado varias consultas seguidas. Espera unos minutos y vuelve a intentarlo.",
+                );
                 return;
             }
 
             if (response.status === 403 || response.status === 413) {
                 showStatus("error", "No pudimos procesar el envío. Recarga la página e inténtalo de nuevo.");
+                showLightbox(
+                    "error",
+                    "No pudimos enviar tu consulta",
+                    "No pudimos procesar el envío. Recarga la página e inténtalo de nuevo.",
+                );
                 return;
             }
 
             showFallback("No pudimos completar el envío. Inténtalo de nuevo o escríbenos directamente por correo.");
+            showLightbox(
+                "error",
+                "No pudimos enviar tu consulta",
+                "Inténtalo de nuevo en unos minutos o escríbenos directamente por correo.",
+            );
         } catch {
             showFallback("No pudimos conectar con el servidor. Revisa tu conexión o escríbenos directamente por correo.");
+            showLightbox(
+                "error",
+                "No pudimos conectar con el servidor",
+                "Revisa tu conexión e inténtalo de nuevo, o escríbenos directamente por correo.",
+            );
         } finally {
             resetSubmitState();
         }
